@@ -1,153 +1,187 @@
 function Get-TTSConvert
 {
-    [Alias('tts.convert','Invoke-TTSConversion','iTTS','iConvTTS','TTS')]
+    [Alias('tts.convert', 'Invoke-TTSConversion', 'iTTS', 'iConvTTS', 'TTS')]
     <#
-    .SYNOPSIS
-    API that converts text into lifelike speech.
-    .DESCRIPTION
-    API that converts text into lifelike speech with best-in-class latency & uses the most advanced AI audio model ever.
-    Create voiceovers for your videos, audiobooks, or create AI chatbots for free.
-    .PARAMETER xi_api_key
-    Your API key. This is required by most endpoints to access our API programatically. You can view your xi-api-key using the 'Profile' tab on the website.
-    .PARAMETER voice_id
-    Voice ID to be used, you can use https://api.elevenlabs.io/v1/voices to list all the available voices.
-    .PARAMETER stream
-    Parameter description
-    .PARAMETER enable_logging
-    When enable_logging is set to false full privacy mode will be used for the request.
-    This will mean history features are unavailable for this request, including request stitching. Full privacy mode may only be used by enterprise customers.
-    .PARAMETER optimize_streaming_latency
-    You can turn on latency optimizations at some cost of quality.
-    The best possible final latency varies by model.
+        .SYNOPSIS
+        API that converts text into lifelike speech.
 
-    Possible values:
-    0 - default mode (no latency optimizations)
-    1 - normal latency optimizations (about 50% of possible latency improvement of option 3)
-    2 - strong latency optimizations (about 75% of possible latency improvement of option 3)
-    3 - max latency optimizations
-    4 - max latency optimizations, but also with text normalizer turned off for even more latency savings (best latency, but can mispronounce eg numbers and dates).
+        .DESCRIPTION
+        API that converts text into lifelike speech with best-in-class latency & uses the most advanced AI audio model ever.
+        Create voiceovers for your videos, audiobooks, or create AI chatbots for free.
 
-    Defaults to None.
-    .PARAMETER output_format
-    string | default: mp3_44100_128
+        .PARAMETER xi_api_key
+        Your API key. This is required by most endpoints to access our API programatically. You can view your xi-api-key using the 'Profile' tab on the website.
 
-    Output format of the generated audio.
+        .PARAMETER voice_id
+        Voice ID to be used, you can use https://api.elevenlabs.io/v1/voices to list all the available voices.
 
-    Must be one of:
-    mp3_22050_32 - output format, mp3 with 22.05kHz sample rate at 32kbps.
-    mp3_44100_32 - output format, mp3 with 44.1kHz sample rate at 32kbps.
-    mp3_44100_64 - output format, mp3 with 44.1kHz sample rate at 64kbps. mp3_44100_96 - output format, mp3 with 44.1kHz sample rate at 96kbps.
-    mp3_44100_128 - default output format, mp3 with 44.1kHz sample rate at 128kbps.
-    mp3_44100_192 - output format, mp3 with 44.1kHz sample rate at 192kbps. Requires you to be subscribed to Creator tier or above.
-    pcm_16000 - PCM format (S16LE) with 16kHz sample rate.
-    pcm_22050 - PCM format (S16LE) with 22.05kHz sample rate.
-    pcm_24000 - PCM format (S16LE) with 24kHz sample rate.
-    pcm_44100 - PCM format (S16LE) with 44.1kHz sample rate. Requires you to be subscribed to Pro tier or above.
-    ulaw_8000 - μ-law format (sometimes written mu-law, often approximated as u-law) with 8kHz sample rate. Note that this format is commonly used for Twilio audio inputs.
+        .PARAMETER stream
+        Parameter description
 
-    I should probably do ValidateParameterSet or whatever it is called but I haven't yet because I'm fucking lazy. I probably won't and will not leave a TODO on it but I'll happily accept PRs. Documenation is always last lol.
-    .PARAMETER text
-    text | string | required
-    The text that will get converted into speech.
-    .PARAMETER model_id
-    model_id | string | default: eleven_monolingual_v1
-    Identifier of the model that will be used, you can query them using GET /v1/models.
-    he model needs to have support for text to speech, you can check this using the can_do_text_to_speech property.
-    .PARAMETER lanuage_code
-    Language code (ISO 639-1) used to enforce a language for the model.
-    Currently only Turbo v2.5 supports language enforcement. For other models, an error will be returned if language code is provided.
-    .FUNCTIONALITY
-    voice_settings is an object.
-    Voice settings overriding stored setttings for the given voice.
-    They are applied only on the given request.
+        .PARAMETER enable_logging
+        When enable_logging is set to false full privacy mode will be used for the request.
+        This will mean history features are unavailable for this request, including request stitching. Full privacy mode may only be used by enterprise customers.
 
-    Voice_Settings child attributes are :
+        .PARAMETER optimize_streaming_latency
+        You can turn on latency optimizations at some cost of quality.
+        The best possible final latency varies by model.
+
+        Possible values:
+        0 - default mode (no latency optimizations)
+        1 - normal latency optimizations (about 50% of possible latency improvement of option 3)
+        2 - strong latency optimizations (about 75% of possible latency improvement of option 3)
+        3 - max latency optimizations
+        4 - max latency optimizations, but also with text normalizer turned off for even more latency savings (best latency, but can mispronounce eg numbers and dates).
+
+        Defaults to None.
+
+        .PARAMETER output_format
+        string | default: mp3_44100_128
+
+        Output format of the generated audio.
+
+        Must be one of:
+        mp3_22050_32 - output format, mp3 with 22.05kHz sample rate at 32kbps.
+        mp3_44100_32 - output format, mp3 with 44.1kHz sample rate at 32kbps.
+        mp3_44100_64 - output format, mp3 with 44.1kHz sample rate at 64kbps. mp3_44100_96 - output format, mp3 with 44.1kHz sample rate at 96kbps.
+        mp3_44100_128 - default output format, mp3 with 44.1kHz sample rate at 128kbps.
+        mp3_44100_192 - output format, mp3 with 44.1kHz sample rate at 192kbps. Requires you to be subscribed to Creator tier or above.
+        pcm_16000 - PCM format (S16LE) with 16kHz sample rate.
+        pcm_22050 - PCM format (S16LE) with 22.05kHz sample rate.
+        pcm_24000 - PCM format (S16LE) with 24kHz sample rate.
+        pcm_44100 - PCM format (S16LE) with 44.1kHz sample rate. Requires you to be subscribed to Pro tier or above.
+        ulaw_8000 - μ-law format (sometimes written mu-law, often approximated as u-law) with 8kHz sample rate. Note that this format is commonly used for Twilio audio inputs.
+
+        I should probably do ValidateParameterSet or whatever it is called but I haven't yet because I'm fucking lazy. I probably won't and will not leave a TODO on it but I'll happily accept PRs. Documenation is always last lol.
+
+        .PARAMETER text
+        text | string | required
+        The text that will get converted into speech.
+
+        .PARAMETER model_id
+        model_id | string | default: eleven_monolingual_v1
+        Identifier of the model that will be used, you can query them using GET /v1/models.
+        he model needs to have support for text to speech, you can check this using the can_do_text_to_speech property.
+
+        .PARAMETER lanuage_code
+        Language code (ISO 639-1) used to enforce a language for the model.
+        Currently only Turbo v2.5 supports language enforcement. For other models, an error will be returned if language code is provided.
+
+        .FUNCTIONALITY
+        voice_settings is an object.
+        Voice settings overriding stored setttings for the given voice.
+        They are applied only on the given request.
+
+        Voice_Settings child attributes are :
+            voice_settings.stability | number | required
+            voice_settings.similarity_boost | number | required
+            voice_settings.style | number | default: 0
+            voice_settings.use_speaker_boost |  boolean | default: true
+        [pscustomobject]$voice_settings=@{
+            voice_settings__stability   =  50
+            voice_settings__similarity_boost    =  50
+            voice_settings__style  = 0
+            voice_settings__use_speaker_boost   = 'true'
+        }
+
+        .PARAMETER voice_settings__stability
         voice_settings.stability | number | required
+
+        .PARAMETER voice_settings__similarity_boost
         voice_settings.similarity_boost | number | required
+        .PARAMETER voice_settings__style
         voice_settings.style | number | default: 0
+
+        .PARAMETER voice_settings__use_speaker_boost
         voice_settings.use_speaker_boost |  boolean | default: true
-    .PARAMETER voice_settings__stability
-    voice_settings.stability | number | required
-    .PARAMETER voice_settings__similarity_boost
-    voice_settings.similarity_boost | number | required
-    .PARAMETER voice_settings__style
-    voice_settings.style | number | default: 0
-    .PARAMETER voice_settings__use_speaker_boost
-    voice_settings.use_speaker_boost |  boolean | default: true
-    .FUNCTIONALITY
-    pronunciation_dictionary_locators
-    object[]
-    A list of pronunciation dictionary locators (id, version_id) to be applied to the text.
-    They will be applied in order.
-    .PARAMETER pronunciation_dictionary_locators__pronunciation_dictionary_id
-    pronunciation_dictionary_locators.pronunciation_dictionary_id
-    string
-    required
-    .PARAMETER pronunciation_dictionary_locators__version_id
-    pronunciation_dictionary_locators.version_id
-    string
-    required
-    .PARAMETER seed
-    integer
 
-    If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same seed and parameters should return the same result.
-    Determinism is not guaranteed.
-    .PARAMETER previous_text
-    string
+        .FUNCTIONALITY
+        pronunciation_dictionary_locators
+        object[]
+        A list of pronunciation dictionary locators (id, version_id) to be applied to the text.
+        They will be applied in order.
 
-    The text that came before the text of the current request.
-    Can be used to improve the flow of prosody when concatenating together multiple generations or to influence the prosody in the current generation.
-    .PARAMETER next_text
-    string
+        .PARAMETER pronunciation_dictionary_locators__pronunciation_dictionary_id
+        pronunciation_dictionary_locators.pronunciation_dictionary_id
+        string
+        required
 
-    The text that comes after the text of the current request.
-    Can be used to improve the flow of prosody when concatenating together multiple generations or to influence the prosody in the current generation.
-    .PARAMETER previous_request_ids
-    string[]
+        .PARAMETER pronunciation_dictionary_locators__version_id
+        pronunciation_dictionary_locators.version_id
+        string
+        required
 
-    A list of request_id of the samples that were generated before this generation.
-    Can be used to improve the flow of prosody when splitting up a large task into multiple requests.
-    The results will be best when the same model is used across the generations.
-    In case both previous_text and previous_request_ids is send, previous_text will be ignored.
-    A maximum of 3 request_ids can be send.
-    .PARAMETER next_request_ids
-    string[]
+        .PARAMETER seed
+        integer
 
-    A list of request_id of the samples that were generated before this generation.
-    Can be used to improve the flow of prosody when splitting up a large task into multiple requests.
-    The results will be best when the same model is used across the generations.
-    In case both next_text and next_request_ids is send, next_text will be ignored.
-    A maximum of 3 request_ids can be send.
-    .PARAMETER use_pvc_as_ivc
-    boolean
+        If specified, our system will make a best effort to sample deterministically, such that repeated requests with the same seed and parameters should return the same result.
+        Determinism is not guaranteed.
 
-    default: false
+        .PARAMETER previous_text
+        string
 
-    deprecated
+        The text that came before the text of the current request.
+        Can be used to improve the flow of prosody when concatenating together multiple generations or to influence the prosody in the current generation.
 
-    If true, we won't use PVC version of the voice for the generation but the IVC version.
-    This is a temporary workaround for higher latency in PVC versions.
-    .EXAMPLE
-    An example
-    .NOTES
-    General notes
-    .OUTPUTS
-    Response
-    200 - audio/mpeg
-    The response is of type file.
-    .COMPONENT
-    <xref:Microsoft.TextToSpeech.TextToSpeechClient>
-    <xref:Microsoft.TextToSpeech.TextToSpeechClient.SynthesizeSpeechAsync>
-    <xref:System.Web>
-    <xref:System.Http>
-    <xref:System.Net>
-    .LINK
-    https://elevenlabs.io/docs/api-reference/text-to-speech
+        .PARAMETER next_text
+        string
 
-    .EXTERNALHELP <https://elevenlabs.io/docs/api-reference/text-to-speech>
+        The text that comes after the text of the current request.
+        Can be used to improve the flow of prosody when concatenating together multiple generations or to influence the prosody in the current generation.
 
-    .EXAMPLE
-    TODO(@Calvindd2f): Need to create tests and shit. Before giving off examples
+        .PARAMETER previous_request_ids
+        string[]
+
+        A list of request_id of the samples that were generated before this generation.
+        Can be used to improve the flow of prosody when splitting up a large task into multiple requests.
+        The results will be best when the same model is used across the generations.
+        In case both previous_text and previous_request_ids is send, previous_text will be ignored.
+        A maximum of 3 request_ids can be send.
+
+        .PARAMETER next_request_ids
+        string[]
+
+        A list of request_id of the samples that were generated before this generation.
+        Can be used to improve the flow of prosody when splitting up a large task into multiple requests.
+        The results will be best when the same model is used across the generations.
+        In case both next_text and next_request_ids is send, next_text will be ignored.
+        A maximum of 3 request_ids can be send.
+
+        .PARAMETER use_pvc_as_ivc
+        boolean
+
+        default: false
+
+        deprecated
+
+        If true, we won't use PVC version of the voice for the generation but the IVC version.
+        This is a temporary workaround for higher latency in PVC versions.
+
+        .EXAMPLE
+        An example
+
+        .NOTES
+        General notes
+
+        .OUTPUTS
+        Response
+        200 - audio/mpeg
+        The response is of type file.
+
+        .COMPONENT
+        <xref:Microsoft.TextToSpeech.TextToSpeechClient>
+        <xref:Microsoft.TextToSpeech.TextToSpeechClient.SynthesizeSpeechAsync>
+        <xref:System.Web>
+        <xref:System.Http>
+        <xref:System.Net>
+
+        .LINK
+        https://elevenlabs.io/docs/api-reference/text-to-speech
+
+        .EXTERNALHELP <https://elevenlabs.io/docs/api-reference/text-to-speech>
+
+        .EXAMPLE
+        TODO(@Calvindd2f): Need to create tests and shit. Before giving off examples
 
     #>
     param (
@@ -172,6 +206,18 @@ function Get-TTSConvert
         $optimize_streaming_latency,
 
         [Parameter()]
+        [ValidateSet(
+            'mp3_22050_32',
+            'mp3_44100_32',
+            'mp3_44100_64',
+            'mp3_44100_128',
+            'mp3_44100_192',
+            'pcm_16000',
+            'pcm_22050',
+            'pcm_24000',
+            'pcm_44100',
+            'ulaw_8000'
+        )]
         [string]
         $output_format = 'mp3_44100_128',
 
@@ -186,6 +232,10 @@ function Get-TTSConvert
         [Parameter()]
         [string]
         $lanuage_code = '',
+
+        [Parameter]
+        [switch]
+        $voice_settings,
 
         [Parameter()]
         [int]
@@ -245,6 +295,22 @@ function Get-TTSConvert
         if ([switch]$stream)
         {
             $url = "https://api.elevenlabs.io/v1/text-to-speech/${voice_id}/stream"
+        }
+
+        if ($voice_settings)
+        {
+            if (!$voice_settings_stability) { $voice_settings_stability = 50 }
+            if (!$voice_settings_similarity_boost) { $voice_settings_similarity_boost = 50 }
+            if (!$voice_settings_style) { $voice_settings_style = 50 }
+            if (!$voice_settings_use_speaker_boost) { $voice_settings_use_speaker_boost = 'true' }
+
+            [pscustomobject]$voice_settings = @{
+                voice_settings_stability         = $voice_settings_stability
+                voice_settings_similarity_boost  = $voice_settings_similarity_boost
+                voice_settings_style             = $voice_settings_style
+                voice_settings_use_speaker_boost = $voice_settings_use_speaker_boost
+            } | ConvertTo-Json
+            $voice_settings
         }
 
         $httpClient = New-Object System.Net.Http.HttpClient
@@ -921,7 +987,7 @@ function Edit-VoiceSettings
         $ParameterName
     )
     <#
-    
+
     POST /v1/voices/${voice_id}/settings/edit
     [string]XI_API_Key
     [string]voice_id*
@@ -1051,10 +1117,10 @@ function Edit-Voice
     {
         $Uri = "https://api.elevenlabs.io/v1/voices/${voice_id}/edit"
         $Body = @{
-            'name'           = $name
-            'files'          = $files
-            'description'    = $description
-            'labels'         = $labels
+            'name'        = $name
+            'files'       = $files
+            'description' = $description
+            'labels'      = $labels
         }
         $Body = [Pscustomobject]$Body
     }
@@ -1132,22 +1198,25 @@ function Generate-A-RandomVoice
         [string]
         $XI_API_Key,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]
         [ValidateScipe({
                 if ($text.Length -lt 100)
                 {
                     throw "Text must be at least 100 characters long."
-                } elseif($text.Length -gt 1000) {
+                }
+                elseif ($text.Length -gt 1000)
+                {
                     throw "Text must be at most 1000 characters long."
-                } else
+                }
+                else
                 {
                     $true
                 }
-        })]
+            })]
         $text,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateScipe({
                 if ($accent_strength -lt 0.3)
                 {
@@ -1165,17 +1234,17 @@ function Generate-A-RandomVoice
         [float]
         $accent_strength,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSetAttribute('american', 'british', 'african', 'australian', 'indian')]
         [string]
         $accent,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSetAttribute('female', 'male')]
         [string]
         $gender,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [ValidateSetAttribute('young', 'middle_aged', 'old ')]
         [string]
         $age
